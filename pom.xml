@@ -76,7 +76,7 @@
         <jqwik.version>1.2.0</jqwik.version>
         <junit.version>5.5.2</junit.version>
         <junitplatform.version>1.5.2</junitplatform.version>
-        <javafx.version>13</javafx.version>
+        <javafx.version>13.0.2</javafx.version>
     </properties>
 
     <!-- ==== END OF SIMPLE CONFIGURATION ==== -->

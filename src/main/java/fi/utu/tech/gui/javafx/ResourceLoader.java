@@ -4,8 +4,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 public class ResourceLoader<N extends Parent, C> {
-    protected final N root;
-    protected final C controller;
+    public final N root;
+    public final C controller;
 
     public ResourceLoader(String contentPath) {
         N root_ = null;
@@ -34,7 +34,7 @@ public class ResourceLoader<N extends Parent, C> {
     public static String image(String fileName) {
         return ResourceLoader.class.getResource(fileName).toExternalForm();
     }
-    
+
     // finds stylesheets both outside and inside jars
     public static String stylesheet(String fileName) {
         return ResourceLoader.class.getResource(fileName).toExternalForm();
