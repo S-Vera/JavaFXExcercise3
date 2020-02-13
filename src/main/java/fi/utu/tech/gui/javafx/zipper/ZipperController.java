@@ -60,12 +60,29 @@ public class ZipperController {
     @FXML
     void zipIt(ActionEvent event) {
         try {
+        	listFiles(sourceField.getText());
             new Zipper().zip(sourceField.getText(), destField.getText());
+            setLabel("Valmis!");
+            
         } catch (IOException e) {
             setLabel(e.getMessage());
         }
     }
 
+    void listFiles(String alku) {
+    	File f = new File(alku);
+    	File[] names = f.listFiles();
+    	if (names != null && names.length > 0) {
+    		for (File file : names) {
+    			if (file.isDirectory()) {
+    				listFiles(file.getAbsolutePath());
+    			}
+    			else {
+    				setLabel(file.getName());
+    			}
+    		}
+    	}
+    }
     <T> void setButtonState(T t) {
         zipItButton.setDisable(!destField.getText().endsWith(".zip"));
     }

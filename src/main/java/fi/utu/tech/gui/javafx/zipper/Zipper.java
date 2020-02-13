@@ -15,6 +15,8 @@ public class Zipper {
             File fileToZip = new File(sourceDir);
 
             zipFile(fileToZip, fileToZip.getName(), zipOut);
+            
+            
         }
     }
 
