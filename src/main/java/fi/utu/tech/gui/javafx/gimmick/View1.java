@@ -33,14 +33,20 @@ class View1 extends View {
         // uncomment to test if it fails
         // it should work if you managed to program this correctly!
         //if (!Platform.isFxApplicationThread()) throw new Error("Wrong thread!");
+    
 
     	new Thread() {
+ 
     		public void run() {
+    	   		if(!active) {
+    	    		return;
+    	    	}
+
         for (int pixelIdx = 0; pixelIdx < data.length; pixelIdx++) {
+
             final int idx = pixelIdx;
             data[idx] = new Random().nextInt(200) | ((new Random().nextInt(16) * 16) << 24);
         }
-
         buffer.getPixelWriter().setPixels(
                 0, 0,
                 width, height,
