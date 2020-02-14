@@ -1,5 +1,6 @@
 package fi.utu.tech.gui.javafx.gimmick;
 
+import javafx.application.Platform;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
 
@@ -33,11 +34,11 @@ class View1 extends View {
         // it should work if you managed to program this correctly!
         //if (!Platform.isFxApplicationThread()) throw new Error("Wrong thread!");
 
+    	new Thread() {
+    		public void run() {
         for (int pixelIdx = 0; pixelIdx < data.length; pixelIdx++) {
             final int idx = pixelIdx;
-            new Thread(() -> {
-                data[idx] = new Random().nextInt(200) | ((new Random().nextInt(16) * 16) << 24);
-            }).run();
+            data[idx] = new Random().nextInt(200) | ((new Random().nextInt(16) * 16) << 24);
         }
 
         buffer.getPixelWriter().setPixels(
@@ -47,16 +48,15 @@ class View1 extends View {
 
         getGraphicsContext2D().clearRect(0.0, 0.0, width, height);
         getGraphicsContext2D().drawImage(buffer, 0.0, 0.0);
+    		}
+    	}.start();
     }
 
     void launchTimer() {
-        final Thread t = new Thread(() -> {
-            render();
-        });
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                t.run();
+                render();
             }
         }, 0l, 1000l);
     }
