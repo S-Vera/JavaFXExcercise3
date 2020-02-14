@@ -1,6 +1,7 @@
 package fi.utu.tech.gui.javafx.gimmick;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
 
@@ -35,27 +36,30 @@ class View1 extends View {
         //if (!Platform.isFxApplicationThread()) throw new Error("Wrong thread!");
     
 
-    	new Thread() {
- 
-    		public void run() {
-    	   		if(!active) {
-    	    		return;
-    	    	}
+   		Task<Void> task = new Task<Void>() {
+   			public Void call() {
+   		        for (int pixelIdx = 0; pixelIdx < data.length; pixelIdx++) {
 
-        for (int pixelIdx = 0; pixelIdx < data.length; pixelIdx++) {
+   		            final int idx = pixelIdx;
+   		            data[idx] = new Random().nextInt(200) | ((new Random().nextInt(16) * 16) << 24);
+   		        }
+   		        buffer.getPixelWriter().setPixels(
+   		                0, 0,
+   		                width, height,
+   		                PixelFormat.getIntArgbPreInstance(), data, 0, width);
 
-            final int idx = pixelIdx;
-            data[idx] = new Random().nextInt(200) | ((new Random().nextInt(16) * 16) << 24);
-        }
-        buffer.getPixelWriter().setPixels(
-                0, 0,
-                width, height,
-                PixelFormat.getIntArgbPreInstance(), data, 0, width);
-
-        getGraphicsContext2D().clearRect(0.0, 0.0, width, height);
-        getGraphicsContext2D().drawImage(buffer, 0.0, 0.0);
-    		}
-    	}.start();
+   		        getGraphicsContext2D().clearRect(0.0, 0.0, width, height);
+   		        getGraphicsContext2D().drawImage(buffer, 0.0, 0.0);
+   		        return null;
+   			}
+   		};
+   		
+    	if(!active) {
+    		task.cancel();
+    	}
+    	Thread th = new Thread(task);
+    	th.setDaemon(true);
+    	th.start();
     }
 
     void launchTimer() {
