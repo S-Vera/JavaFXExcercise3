@@ -11,13 +11,7 @@ public class MainApp1 extends MainApp {
     @Override
     public void start(Stage stage) {
     	
-    	Task<Void> task = new Task<Void>() {
-    		@Override 
-    		protected Void call() throws Exception{
-    			
-    			return null;
-    		}
-    	};
+ 
         ResourceLoader<Parent, ZipperController> loader = new ResourceLoader<>("zipper.fxml");
 
         loader.controller.setLabel("Welcome!");
@@ -28,5 +22,14 @@ public class MainApp1 extends MainApp {
         stage.setTitle("Zip Master 2020");
         stage.setScene(scene);
         stage.show();
+        
+      	Task<Void> task = new Task<Void>() {
+    		@Override 
+    		protected Void call() throws Exception{
+    			return null;
+    		}
+       	};
+    	
+ 
     }
 }

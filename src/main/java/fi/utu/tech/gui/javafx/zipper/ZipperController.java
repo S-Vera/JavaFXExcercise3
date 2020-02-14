@@ -1,6 +1,7 @@
 package fi.utu.tech.gui.javafx.zipper;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -58,31 +59,29 @@ public class ZipperController {
     }
 
     @FXML
-    void zipIt(ActionEvent event) {
+    void zipIt(ActionEvent event){
         try {
-        	listFiles(sourceField.getText());
-            new Zipper().zip(sourceField.getText(), destField.getText());
-            setLabel("Valmis!");
+        	zipItButton.setText("Cancel");
+        	Zipper z = new Zipper(sourceField.getText(), destField.getText());
+
+            Thread th = new Thread(z);
+        	zipItButton.setOnAction(new EventHandler<ActionEvent>() {
+        		public void handle(ActionEvent event) {
+        			z.cancel();
+        		}
+        	});
+            th.setDaemon(true);
+            th.start();
             
-        } catch (IOException e) {
+            setLabel("Valmis!");
+            zipItButton.setText("Zip it!");
+            
+        } catch (Exception e) {
             setLabel(e.getMessage());
         }
     }
 
-    void listFiles(String alku) {
-    	File f = new File(alku);
-    	File[] names = f.listFiles();
-    	if (names != null && names.length > 0) {
-    		for (File file : names) {
-    			if (file.isDirectory()) {
-    				listFiles(file.getAbsolutePath());
-    			}
-    			else {
-    				setLabel(file.getName());
-    			}
-    		}
-    	}
-    }
+
     <T> void setButtonState(T t) {
         zipItButton.setDisable(!destField.getText().endsWith(".zip"));
     }
@@ -90,5 +89,12 @@ public class ZipperController {
     public void initialize() {
         setButtonState(null);
         destField.setOnKeyTyped(this::setButtonState);
+    }
+    
+   public class NameLoader{
+    	public void labelName(String name) {
+    		setLabel("name");
+    	}
+    	
     }
 }
